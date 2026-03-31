@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneo Old_SC</title>
+    <style>
+        :root {
+            --sc-blue: #00d2ff; /* Color de terminal para bordes y títulos */
+            --sc-gold: #fcc200; /* Color de resaltado para ganadores y la Gran Final */
+            --sc-dark: #050a0f; /* Fondo oscuro industrial */
+            --sc-panel: rgba(10, 20, 30, 0.95); /* Fondo de paneles con transparencia */
+            --win-bg: rgba(0, 255, 136, 0.2); /* Fondo para celdas de victoria */
+            --loss-bg: rgba(255, 68, 68, 0.2); /* Fondo para celdas de derrota */
+            --draw-bg: rgba(255, 255, 255, 0.1); /* Fondo para celdas de empate */
+            --border-style: 1px solid var(--sc-blue);
+        }
+
+        body {
+            background-color: var(--sc-dark);
+            /* Fondo espacial clásico radial */
+            background-image: radial-gradient(circle, #1b2735 0%, #090a0f 100%);
+            color: #e0e0e0;
+            font-family: 'Courier New', Courier, monospace; /* Estilo terminal */
+            margin: 0;
+            padding: 20px;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--sc-gold);
+            text-shadow: 2px 2px 0px #000, 0 0 15px rgba(252, 194, 0, 0.4);
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        .section-box {
+            background: var(--sc-panel);
+            border: var(--border-style);
+            padding: 25px;
+            margin-bottom: 50px;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.1);
+        }
+
+        h2 { color: var(--sc-blue); border-bottom: 1px solid var(--sc-blue); padding-bottom: 10px; text-transform: uppercase; font-size: 1.4rem; margin-top: 0;}
+
+        /* --- FASE 01: MATRIZ Y POSICIONES (ESTA SECCIÓN ESTÁ BLINDADA Y NO SE MUEVE) --- */
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 0.75rem;
+            margin: 20px 0 40px 0; /* Espaciado con la tabla de posiciones */
+        }
+
+        .matrix-table th, .matrix-table td {
+            border: 1px solid rgba(0, 210, 255, 0.2);
+            padding: 10px 5px;
+        }
+
+        .matrix-table th { background: rgba(0, 210, 255, 0.1); color: var(--sc-gold); }
+        .player-col { text-align: left; width: 120px; font-weight: bold; color: var(--sc-blue); }
+        
+        .self-cell { background: rgba(255,255,255,0.05); } /* Celda diagonal (mismo jugador) */
+
+        /* Estilos para celdas de resultado (usar al completar) */
+        .res-win { background: var(--win-bg); color: #00ff88; font-weight: bold; }
+        .res-loss { background: var(--loss-bg); color: #ff6666; }
+        .res-draw { background: var(--draw-bg); color: #fff; }
+
+        .standings-table { width: 100%; border-collapse: collapse; }
+        .standings-table th { border-bottom: 2px solid var(--sc-blue); padding: 12px; text-align: left; color: var(--sc-gold); }
+        .standings-table td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+        /* --- FASE 02: BRACKET DE DOBLE ELIMINACIÓN (REESCRITA BASADA EN EL MODELO CORRECTO) --- */
+        .bracket-container {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            overflow-x: auto; /* Para pantallas más pequeñas */
+            padding: 20px 0;
+        }
+
+        /* Contenedores para Upper y Lower */
+        .bracket-row { display: flex; gap: 30px; align-items: flex-start; }
+        .column { display: flex; flex-direction: column; min-width: 200px; }
+        .col-header { 
+            font-size: 0.7rem; color: var(--sc-blue); text-align: center; 
+            margin-bottom: 15px; text-transform: uppercase; border: 1px solid var(--sc-blue);
+            background: rgba(0, 210, 255, 0.05); padding: 4px;
+        }
+
+        /* Estilo de cada partido */
+        .match {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #444;
+            margin-bottom: 20px;
+            padding: 8px;
+            font-size: 0.85rem;
+        }
+
+        .player { display: flex; justify-content: space-between; padding: 4px 6px; }
+        .score { font-weight: bold; color: var(--sc-gold); min-width: 20px; text-align: center; border-left: 1px solid #333; }
+        .sep { border-top: 1px solid #333; margin: 4px 0; }
+        .bracket-label { color: var(--sc-gold); font-weight: bold; margin-bottom: 20px; display: block; font-size: 1.1rem; letter-spacing: 2px;}
+
+        /* Estilo especial para la Gran Final */
+        .grand-final-box { border: 2px solid var(--sc-gold); box-shadow: 0 0 15px rgba(252, 194, 0, 0.2); }
+        
+        /* Clases de utilidad para resultados (usar al completar) */
+        .winner-res { color: #00ff88; }
+        .loser-res { color: #ff4444; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="main-title">Torneo Old_SC</h1>
+
+    <div class="section-box">
+        <h2>FASE 01: MATRIZ DE CRUCES (BO2)</h2>
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th class="player-col">VS</th>
+                    <th>NDS</th><th>TEXTEX</th><th>RAYO</th><th>T14</th><th>VILLANO</th>
+                    <th>ACHUCO</th><th>JUDA</th><th>RECHARTE</th><th>DARKDUKE</th><th>CUZCANO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="player-col">NDS</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="player-col">TEXTEX</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="player-col">RAYO</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="player-col">T14</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="player-col">VILLANO</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="player-col">ACHUCO</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="player-col">JUDA</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="player-col">RECHARTE</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td></tr>
+                <tr><td class="player-col">DARKDUKE</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td></tr>
+                <tr><td class="player-col">CUZCANO</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td></tr>
+            </tbody>
+        </table>
+
+        <h2>TABLA DE POSICIONES</h2>
+        <table class="standings-table">
+            <thead>
+                <tr>
+                    <th>POS</th>
+                    <th>JUGADOR</th>
+                    <th>PTS</th>
+                    <th>W-D-L</th>
+                    <th>SCORE MAPAS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>NDS</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>2</td><td>TEXTEX</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>3</td><td>RAYO</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>4</td><td>T14</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>5</td><td>VILLANO</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>6</td><td>ACHUCO</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>7</td><td>JUDA</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>8</td><td>RECHARTE</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>9</td><td>DARKDUKE</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+                <tr><td>10</td><td>CUZCANO</td><td>0</td><td>0-0-0</td><td>0-0</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section-box">
+        <h2>FASE 02: CUADRO DE ELIMINACIÓN (DOBLE)</h2>
+        <div class="bracket-container">
+            
+            <span class="bracket-label">> UPPER BRACKET (Cuadro de Ganadores)</span>
+            <div class="bracket-row">
+                <div class="column">
+                    <div class="col-header">Upper Cuartos</div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                </div>
+                <div class="column" style="margin-top: 45px;">
+                    <div class="col-header">Upper Semis</div>
+                    <div class="match" style="margin-bottom: 75px;"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                </div>
+                <div class="column" style="margin-top: 110px;">
+                    <div class="col-header">Upper Final</div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid rgba(0,210,255,0.2); margin: 20px 0;">
+
+            <span class="bracket-label">> LOWER BRACKET (Segunda Oportunidad)</span>
+            <div class="bracket-row">
+                <div class="column">
+                    <div class="col-header">Lower R1</div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                </div>
+                <div class="column">
+                    <div class="col-header">Lower Quarter</div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                </div>
+                <div class="column">
+                    <div class="col-header">Lower Semi</div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                </div>
+                <div class="column">
+                    <div class="col-header">Lower Final</div>
+                    <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>TBD</span><span class="score">-</span></div></div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; margin-top: 40px; border-top: 1px solid var(--sc-gold); padding-top: 40px;">
+                <div class="column" style="min-width: 300px;">
+                    <div class="col-header" style="background: var(--sc-gold); color: black; font-weight: bold;">GRAN FINAL</div>
+                    <div class="match grand-final-box">
+                        <div class="player"><span>Ganador Upper</span><span class="score">-</span></div>
+                        <div class="sep"></div>
+                        <div class="player"><span>Ganador Lower</span><span class="score">-</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
