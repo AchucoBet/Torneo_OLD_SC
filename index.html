@@ -57,7 +57,6 @@
             .fase-grupos-container { grid-template-columns: 1fr; }
         }
 
-        /* MATRIZ DE CRUCES */
         .matrix-table {
             width: 100%;
             border-collapse: collapse;
@@ -75,20 +74,21 @@
         .player-col { text-align: left; width: 100px; font-weight: bold; color: var(--sc-blue); }
         .self-cell { background: rgba(255,255,255,0.05); }
 
-        /* TABLA POSICIONES */
+        .res-win { background: var(--win-bg); color: #00ff88; font-weight: bold; }
+        .res-loss { background: var(--loss-bg); color: #ff6666; }
+        .res-draw { background: var(--draw-bg); color: #fff; }
+
         .standings-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 0.85rem;}
         .standings-table th { border-bottom: 2px solid var(--sc-blue); padding: 8px; text-align: left; color: var(--sc-gold); }
         .standings-table td { padding: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 
-        /* ESTADOS DE CLASIFICACIÓN */
         .upper-status { color: #00ff88; font-weight: bold; }
         .lower-status { color: var(--sc-blue); }
         .eliminated-status { color: #ff4444; text-decoration: line-through; opacity: 0.6; }
 
-        /* FASE 02: BRACKETS */
         .bracket-container { display: flex; flex-direction: column; gap: 40px; overflow-x: auto; padding-top: 20px; }
         .bracket-row { display: flex; gap: 30px; align-items: flex-start; }
-        .column { display: flex; flex-direction: column; min-width: 200px; }
+        .column { display: flex; flex-direction: column; min-width: 220px; }
         .col-header { font-size: 0.7rem; color: var(--sc-blue); text-align: center; margin-bottom: 15px; text-transform: uppercase; border: 1px solid var(--sc-blue); background: rgba(0, 210, 255, 0.05); padding: 4px; }
         .match { background: rgba(0, 0, 0, 0.7); border: 1px solid #444; margin-bottom: 20px; padding: 8px; font-size: 0.85rem; }
         .player { display: flex; justify-content: space-between; padding: 4px 6px; }
@@ -112,25 +112,27 @@
                     <thead>
                         <tr>
                             <th class="player-col">VS</th>
-                            <th>NDS</th><th>T14</th><th>VILLANO</th><th>JUDA</th><th>DARKDUKE</th>
+                            <th>VILLANO</th><th>TEXTEX</th><th>RAYO</th><th>RECHARTE</th><th>CUZCANO</th><th>JUDA</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="player-col">NDS</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="player-col">T14</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="player-col">VILLANO</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td></tr>
-                        <tr><td class="player-col">JUDA</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td></tr>
-                        <tr><td class="player-col">DARKDUKE</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td></tr>
+                        <tr><td class="player-col">VILLANO</td><td class="self-cell"></td><td class="res-draw">1-1</td><td class="res-draw">1-1</td><td class="res-loss">0-2</td><td>-</td><td class="res-loss">0-2</td></tr>
+                        <tr><td class="player-col">TEXTEX</td><td class="res-draw">1-1</td><td class="self-cell"></td><td>-</td><td class="res-draw">1-1</td><td>-</td><td class="res-draw">1-1</td></tr>
+                        <tr><td class="player-col">RAYO</td><td class="res-draw">1-1</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td></tr>
+                        <tr><td class="player-col">RECHARTE</td><td class="res-win">2-0</td><td class="res-draw">1-1</td><td>-</td><td class="self-cell"></td><td>-</td><td class="res-loss">0-2</td></tr>
+                        <tr><td class="player-col">CUZCANO</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td></tr>
+                        <tr><td class="player-col">JUDA</td><td class="res-win">2-0</td><td class="res-draw">1-1</td><td>-</td><td class="res-win">2-0</td><td>-</td><td class="self-cell"></td></tr>
                     </tbody>
                 </table>
                 <table class="standings-table">
-                    <thead><tr><th>POS</th><th>JUGADOR</th><th>PTS</th><th>ESTADO</th></tr></thead>
+                    <thead><tr><th>POS</th><th>JUGADOR</th><th>G</th><th>P</th><th>ESTADO</th></tr></thead>
                     <tbody>
-                        <tr class="upper-status"><td>1</td><td>NDS</td><td>0</td><td>UPPER</td></tr>
-                        <tr class="upper-status"><td>2</td><td>T14</td><td>0</td><td>UPPER</td></tr>
-                        <tr class="lower-status"><td>3</td><td>VILLANO</td><td>0</td><td>LOWER</td></tr>
-                        <tr class="lower-status"><td>4</td><td>JUDA</td><td>0</td><td>LOWER</td></tr>
-                        <tr class="eliminated-status"><td>5</td><td>DARKDUKE</td><td>0</td><td>ELIMINADO</td></tr>
+                        <tr class="upper-status"><td>1</td><td>JUDA</td><td>5</td><td>1</td><td>UPPER (Prov.)</td></tr>
+                        <tr class="upper-status"><td>2</td><td>RECHARTE</td><td>3</td><td>3</td><td>UPPER (Prov.)</td></tr>
+                        <tr class="lower-status"><td>3</td><td>TEXTEX</td><td>3</td><td>3</td><td>LOWER (Prov.)</td></tr>
+                        <tr class="lower-status"><td>4</td><td>VILLANO</td><td>2</td><td>6</td><td>LOWER (Prov.)</td></tr>
+                        <tr class="eliminated-status"><td>5</td><td>RAYO</td><td>1</td><td>1</td><td>ELIMINADO</td></tr>
+                        <tr class="eliminated-status"><td>6</td><td>CUZCANO</td><td>0</td><td>0</td><td>ELIMINADO</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -141,25 +143,25 @@
                     <thead>
                         <tr>
                             <th class="player-col">VS</th>
-                            <th>TEXTEX</th><th>RAYO</th><th>ACHUCO</th><th>RECHARTE</th><th>CUZCANO</th>
+                            <th>NDS</th><th>T14</th><th>ACHUCO</th><th>DARKDUKE</th><th>7PLAGA</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="player-col">TEXTEX</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="player-col">RAYO</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td><td>-</td></tr>
-                        <tr><td class="player-col">ACHUCO</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td><td>-</td></tr>
-                        <tr><td class="player-col">RECHARTE</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td><td>-</td></tr>
-                        <tr><td class="player-col">CUZCANO</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="self-cell"></td></tr>
+                        <tr><td class="player-col">NDS</td><td class="self-cell"></td><td class="res-win">2-0</td><td class="res-draw">1-1</td><td class="res-loss">0-2</td><td class="res-win">2-0</td></tr>
+                        <tr><td class="player-col">T14</td><td class="res-loss">0-2</td><td class="self-cell"></td><td class="res-win">2-0</td><td class="res-loss">0-2</td><td class="res-loss">0-2</td></tr>
+                        <tr><td class="player-col">ACHUCO</td><td class="res-draw">1-1</td><td class="res-loss">0-2</td><td class="self-cell"></td><td class="res-loss">0-2</td><td class="res-draw">1-1</td></tr>
+                        <tr><td class="player-col">DARKDUKE</td><td class="res-win">2-0</td><td class="res-win">2-0</td><td class="res-win">2-0</td><td class="self-cell"></td><td class="res-win">2-0</td></tr>
+                        <tr><td class="player-col">7PLAGA</td><td class="res-loss">0-2</td><td class="res-win">2-0</td><td class="res-draw">1-1</td><td class="res-loss">0-2</td><td class="self-cell"></td></tr>
                     </tbody>
                 </table>
                 <table class="standings-table">
-                    <thead><tr><th>POS</th><th>JUGADOR</th><th>PTS</th><th>ESTADO</th></tr></thead>
+                    <thead><tr><th>POS</th><th>JUGADOR</th><th>G</th><th>P</th><th>ESTADO</th></tr></thead>
                     <tbody>
-                        <tr class="upper-status"><td>1</td><td>TEXTEX</td><td>0</td><td>UPPER</td></tr>
-                        <tr class="upper-status"><td>2</td><td>RAYO</td><td>0</td><td>UPPER</td></tr>
-                        <tr class="lower-status"><td>3</td><td>ACHUCO</td><td>0</td><td>LOWER</td></tr>
-                        <tr class="lower-status"><td>4</td><td>RECHARTE</td><td>0</td><td>LOWER</td></tr>
-                        <tr class="eliminated-status"><td>5</td><td>CUZCANO</td><td>0</td><td>ELIMINADO</td></tr>
+                        <tr class="upper-status"><td>1</td><td>DARKDUKE</td><td>8</td><td>0</td><td>UPPER</td></tr>
+                        <tr class="upper-status"><td>2</td><td>NDS</td><td>5</td><td>3</td><td>UPPER</td></tr>
+                        <tr class="lower-status"><td>3</td><td>7PLAGA</td><td>3</td><td>5</td><td>LOWER</td></tr>
+                        <tr class="lower-status"><td>4</td><td>ACHUCO</td><td>2</td><td>6</td><td>LOWER</td></tr>
+                        <tr class="eliminated-status"><td>5</td><td>T14</td><td>2</td><td>6</td><td>ELIMINADO</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -174,8 +176,8 @@
             <div class="bracket-row">
                 <div class="column">
                     <div class="col-header">Semis Upper</div>
-                    <div class="match"><div class="player"><span>1° Grupo A</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>2° Grupo B</span><span class="score">-</span></div></div>
-                    <div class="match"><div class="player"><span>1° Grupo B</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>2° Grupo A</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>1° Grupo A</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>NDS</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>DARKDUKE</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>2° Grupo A</span><span class="score">-</span></div></div>
                 </div>
                 <div class="column" style="justify-content: center;">
                     <div class="col-header">Final Upper</div>
@@ -187,11 +189,11 @@
             <div class="bracket-row">
                 <div class="column">
                     <div class="col-header">Lower R1</div>
-                    <div class="match"><div class="player"><span>3° Grupo A</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>4° Grupo B</span><span class="score">-</span></div></div>
-                    <div class="match"><div class="player"><span>3° Grupo B</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>4° Grupo A</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>3° Grupo A</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>ACHUCO</span><span class="score">-</span></div></div>
+                    <div class="match"><div class="player"><span>7PLAGA</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>4° Grupo A</span><span class="score">-</span></div></div>
                 </div>
                 <div class="column">
-                    <div class="col-header">Lower Quarter (vs perdedores Upper)</div>
+                    <div class="col-header">Lower Quarter</div>
                     <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>Perdedor Semi Upper</span><span class="score">-</span></div></div>
                     <div class="match"><div class="player"><span>TBD</span><span class="score">-</span></div><div class="sep"></div><div class="player"><span>Perdedor Semi Upper</span><span class="score">-</span></div></div>
                 </div>
